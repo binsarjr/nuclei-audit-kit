@@ -1,0 +1,49 @@
+id: sensitive-files-detection
+
+info:
+  name: Sensitive Files Detection
+  author: binsar
+  severity: high
+  tags: sensitive, files, information-disclosure
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}{{paths}}"
+    payloads:
+      paths:
+        - "/.env"
+        - "/.htaccess"
+        - "/config.php"
+        - "/config.json"
+        - "/backup.zip"
+        - "/backup.tar.gz"
+        - "/db-backup.sql"
+        - "/logs/error.log"
+        - "/logs/access.log"
+        - "/credentials.txt"
+        - "/private.key"
+        - "/id_rsa"
+        - "/id_rsa.pub"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        condition: or
+        words:
+          - "APP_"
+          - "DATABASE_URL"
+          - "DB_PASSWORD"
+          - "Index of"
+          - "Repository"
+          - "environment"
+          - "config"
+          - "backup"
+          - "log"
+          - "private"
+        part: body
+
+      - type: status
+        status:
+          - 200
+          - 403

@@ -1,0 +1,41 @@
+id: git-exposure
+
+info:
+  name: Git Exposure
+  author: binsar
+  severity: high
+  description: Git Exposure
+  tags: exposure,git
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}{{paths}}"
+    payloads:
+      paths:
+        - "/.git/"
+        - "/.git/config"
+        - "/.git/HEAD"
+        - "/.git/index"
+        - "/.git/logs/HEAD"
+        - "/.git/logs/refs/heads/master"
+        - "/.git/logs/refs/remotes/origin/master"
+        - "/.git/objects/pack/pack-1f4c7f2a2c3e8b2f6a1c1b8a0b9c2d3e.pack"
+        - "/.git/packed-refs"
+        - "/.git/refs/heads/master"
+        - "/.git/refs/remotes/origin/master"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "ref: refs/heads/master"
+          - "commit"
+          - "tree"
+          - "author"
+          - "committer"
+        part: body
+
+      - type: status
+        status:
+          - 200

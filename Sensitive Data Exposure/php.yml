@@ -1,0 +1,32 @@
+id: php-exposure
+
+info:
+  name: PHP Exposure
+  author: binsar
+  severity: high
+  description: PHP Exposure
+  tags: exposure,php
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}{{paths}}"
+    payloads:
+      paths:
+        - "/phpinfo.php"
+        - "/info.php"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "PHP Version"
+          - "Zend Engine"
+          - "allow_url_fopen"
+          - "safe_mode"
+        condition: or
+        part: body
+
+      - type: status
+        status:
+          - 200
